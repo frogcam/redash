@@ -38,7 +38,7 @@ function wordCloudRenderer() {
 
         const wordList = [];
         each(wordsHash, (v, key) => {
-          wordList.push({ text: key, size: Math.min(Math.sqrt(v) * 10, 200) });
+          wordList.push({ text: key, size: Math.min(Math.sqrt(v) * 10, 40) });
         });
 
         const fill = d3.scale.category20();
