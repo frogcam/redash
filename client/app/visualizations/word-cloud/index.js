@@ -22,6 +22,16 @@ function findWordFrequencies(data, columnName) {
   return wordsHash;
 }
 
+function extractWordFrequency(data, columnName, frequencyColumnName) {
+  const wordsHash = {};
+
+  data.forEach((row) => {
+    wordsHash[row[columnName]] = row[frequencyColumnName];
+  });
+
+  return wordsHash;
+}
+
 function wordCloudRenderer() {
   return {
     restrict: 'E',
@@ -32,8 +42,15 @@ function wordCloudRenderer() {
         const data = $scope.queryResult.getData();
         let wordsHash = {};
 
-        if ($scope.visualization.options.column) {
-          wordsHash = findWordFrequencies(data, $scope.visualization.options.column);
+        const columnName = $scope.visualization.options.column;
+
+        if (columnName) {
+          if ($scope.visualization.options.frequency) {
+            const frequencyColumnName = $scope.visualization.options.frequency;
+            wordsHash = extractWordFrequency(data, columnName, frequencyColumnName);
+          } else {
+            wordsHash = findWordFrequencies(data, columnName);
+          }
         }
 
         const wordList = [];
