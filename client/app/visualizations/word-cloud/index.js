@@ -19,7 +19,7 @@ function findWordFrequencies(data, columnName) {
     });
   });
 
-  return indexWordsAfterSort(wordsHash);
+  return wordsHash;
 }
 
 function wordCloudRenderer() {
@@ -37,8 +37,12 @@ function wordCloudRenderer() {
         }
 
         const wordList = [];
-        each(wordsHash, (v, key) => {
-          wordList.push({ text: key, size: Math.min(Math.sqrt(v) * 10, 40) });
+
+        const values = Object.keys(wordsHash).map(key => wordsHash[key]);
+        const maxValue = Math.max.apply(null, values);
+
+        each(wordsHash, (value, key) => {
+          wordList.push({ text: key, size: 120 * value / maxValue });
         });
 
         const fill = d3.scale.category20();
@@ -112,19 +116,3 @@ export default function init(ngModule) {
 }
 
 init.init = true;
-
-
-function indexWordsAfterSort(words) {
-  const wordsAndFrequenciesArray = [];
-
-  Object.keys(words).map(key => wordsAndFrequenciesArray.push([key, words[key]]));
-
-  let wordIndexAfterSort = 0;
-
-  return wordsAndFrequenciesArray
-    .sort((element1, element2) => element1[1] - element2[1])
-    .reduce((result, element) => {
-      wordIndexAfterSort += 1;
-      return Object.assign(result, { [element[0]]: wordIndexAfterSort });
-    }, {});
-}
